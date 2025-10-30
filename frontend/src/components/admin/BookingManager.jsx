@@ -68,7 +68,7 @@ export default function BookingManager() {
 
   const handleStatusChange = async (bookingId, newStatus) => {
     try {
-      const response = await api.put(`/admin/bookings/${bookingId}`, {
+      await api.put(`/admin/bookings/${bookingId}`, {
         bookingStatus: newStatus,
       });
       setToast({

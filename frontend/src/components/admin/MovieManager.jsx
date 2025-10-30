@@ -75,7 +75,7 @@ export default function MovieManager() {
     try {
       const response = await api.get("/movies");
       setMovies(response.data);
-    } catch (error) {
+    } catch {
       setToast({
         message: "Failed to fetch movies",
         type: "error",

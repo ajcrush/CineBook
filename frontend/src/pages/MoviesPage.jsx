@@ -9,7 +9,7 @@ export default function MoviesPage() {
 
   useEffect(() => {
     fetchMovies();
-  }, []);
+  }, [fetchMovies]);
 
   const genres = ["All"];
   movies.forEach((movie) => {

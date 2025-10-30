@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import api from "../../services/api";
 import Toast from "../Toast";
 
@@ -7,13 +7,8 @@ export default function ReportsManager() {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
   const [dateRange, setDateRange] = useState("all");
-  const [selectedMetric, setSelectedMetric] = useState("revenue");
 
-  useEffect(() => {
-    fetchAnalytics();
-  }, [dateRange]);
-
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = useCallback(async () => {
     setLoading(true);
     try {
       const response = await api.get(`/admin/analytics?range=${dateRange}`);
@@ -26,7 +21,11 @@ export default function ReportsManager() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [dateRange]);
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, [fetchAnalytics]);
 
   if (loading || !analytics) {
     return (

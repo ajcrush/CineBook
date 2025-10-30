@@ -43,7 +43,7 @@ export default function CheckoutPage() {
       });
 
       // Create booking with movieId
-      const booking = await createBooking(
+      await createBooking(
         showtime._id,
         seats,
         totalPrice,

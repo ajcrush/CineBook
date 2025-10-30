@@ -46,7 +46,7 @@ Click "Actions"
 ### Location:
 
 ```
-Settings 
+Settings
   → Secrets and variables (Left Menu)
   → Actions
   → "Repository secrets" Section
@@ -195,10 +195,10 @@ git push origin main
 
 ### The Two Secrets:
 
-| Secret Name | Value | Where to Get |
-|---|---|---|
-| `DOCKERHUB_USERNAME` | `fkdjshsus` | Your Docker Hub username |
-| `DOCKERHUB_TOKEN` | Long string | Docker Hub Personal Access Tokens |
+| Secret Name          | Value       | Where to Get                      |
+| -------------------- | ----------- | --------------------------------- |
+| `DOCKERHUB_USERNAME` | `fkdjshsus` | Your Docker Hub username          |
+| `DOCKERHUB_TOKEN`    | Long string | Docker Hub Personal Access Tokens |
 
 ### Where to Add Them:
 
@@ -222,12 +222,14 @@ https://github.com/ajcrush/CineBook/settings/secrets/actions
 ## 🚨 Important Security Tips
 
 ⚠️ **NEVER:**
+
 - Share your `DOCKERHUB_TOKEN` with anyone
 - Commit it to your code
 - Post it in public places
 - Include it in log files
 
 ✅ **DO:**
+
 - Keep it stored only in GitHub Secrets
 - Regenerate it if you think it's compromised
 - Use it ONLY for GitHub Actions
@@ -269,6 +271,7 @@ Pushes to Docker Hub automatically
 ### Issue: "Authentication failed"
 
 **Solution:**
+
 - Check `DOCKERHUB_TOKEN` is correct
 - Regenerate a new token if needed
 - Verify `DOCKERHUB_USERNAME` matches your Docker Hub username
@@ -276,6 +279,7 @@ Pushes to Docker Hub automatically
 ### Issue: "Secrets not found in workflow"
 
 **Solution:**
+
 - Make sure secrets are in **Repository secrets** (not Environment secrets)
 - Make sure you named them exactly: `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`
 - Restart the workflow (push new code or click "Run workflow")
@@ -283,6 +287,7 @@ Pushes to Docker Hub automatically
 ### Issue: "Workflow not triggering"
 
 **Solution:**
+
 - Check `.github/workflows/docker-hub-push.yml` exists
 - Make sure you pushed to `main` or `develop` branch
 - Check Actions tab to see if workflow exists

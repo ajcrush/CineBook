@@ -13,7 +13,7 @@ export default function MyBookingsPage() {
 
   useEffect(() => {
     getMyBookings();
-  }, []);
+  }, [getMyBookings]);
 
   const handleCancelBooking = async () => {
     try {

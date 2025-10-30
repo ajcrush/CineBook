@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useMovieStore } from "../stores/movieStore";
 import { useBookingStore } from "../stores/bookingStore";
@@ -16,10 +16,14 @@ export default function MovieDetailPage() {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [toast, setToast] = useState(null);
 
-  useEffect(() => {
+  const fetchMovieData = useCallback(() => {
     fetchMovieById(id);
     fetchShowtimes(id);
-  }, [id]);
+  }, [id, fetchMovieById, fetchShowtimes]);
+
+  useEffect(() => {
+    fetchMovieData();
+  }, [fetchMovieData]);
 
   const handleSeatClick = (seatNumber) => {
     if (selectedSeats.includes(seatNumber)) {

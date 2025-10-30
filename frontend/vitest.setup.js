@@ -1,5 +1,8 @@
 import "@testing-library/jest-dom";
+import { beforeAll } from "vitest";
 
 // Mock environment variables
-process.env.VITE_API_BASE_URL = "http://localhost:5000/api";
-process.env.VITE_STRIPE_PUBLIC_KEY = "pk_test_dummy";
+beforeAll(() => {
+  import.meta.env.VITE_API_BASE_URL = "http://localhost:5000/api";
+  import.meta.env.VITE_STRIPE_PUBLIC_KEY = "pk_test_dummy";
+});
