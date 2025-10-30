@@ -1,0 +1,46 @@
+name: Dependency Updates
+
+on:
+  schedule:
+    # Run every Monday at 8 AM UTC
+    - cron: "0 8 * * 1"
+  workflow_dispatch:
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Check for outdated packages (Backend)
+        run: cd backend && npm outdated || true
+
+      - name: Check for outdated packages (Frontend)
+        run: cd frontend && npm outdated || true
+
+      - name: Update dependencies (Backend)
+        run: cd backend && npm update
+
+      - name: Update dependencies (Frontend)
+        run: cd frontend && npm update
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: "chore: update dependencies"
+          title: "chore: weekly dependency update"
+          body: |
+            🤖 This is an automated PR to update dependencies.
+
+            Please review the changes and run tests before merging.
+          branch: chore/update-dependencies
+          delete-branch: true

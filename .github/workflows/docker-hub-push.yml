@@ -1,0 +1,77 @@
+name: Build and Push to Docker Hub
+
+on:
+  push:
+    branches: [main, develop]
+    tags: ["v*"]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Determine image tags
+      - name: Determine tags
+        id: tags
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "backend_tags=${{ secrets.DOCKERHUB_USERNAME }}/cinebook-backend:latest,${{ secrets.DOCKERHUB_USERNAME }}/cinebook-backend:${{ github.sha }}" >> $GITHUB_OUTPUT
+            echo "frontend_tags=${{ secrets.DOCKERHUB_USERNAME }}/cinebook-frontend:latest,${{ secrets.DOCKERHUB_USERNAME }}/cinebook-frontend:${{ github.sha }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
+            echo "backend_tags=${{ secrets.DOCKERHUB_USERNAME }}/cinebook-backend:develop,${{ secrets.DOCKERHUB_USERNAME }}/cinebook-backend:dev-${{ github.sha }}" >> $GITHUB_OUTPUT
+            echo "frontend_tags=${{ secrets.DOCKERHUB_USERNAME }}/cinebook-frontend:develop,${{ secrets.DOCKERHUB_USERNAME }}/cinebook-frontend:dev-${{ github.sha }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            TAG=${GITHUB_REF#refs/tags/}
+            echo "backend_tags=${{ secrets.DOCKERHUB_USERNAME }}/cinebook-backend:$TAG,${{ secrets.DOCKERHUB_USERNAME }}/cinebook-backend:latest" >> $GITHUB_OUTPUT
+            echo "frontend_tags=${{ secrets.DOCKERHUB_USERNAME }}/cinebook-frontend:$TAG,${{ secrets.DOCKERHUB_USERNAME }}/cinebook-frontend:latest" >> $GITHUB_OUTPUT
+          else
+            echo "backend_tags=${{ secrets.DOCKERHUB_USERNAME }}/cinebook-backend:${{ github.sha }}" >> $GITHUB_OUTPUT
+            echo "frontend_tags=${{ secrets.DOCKERHUB_USERNAME }}/cinebook-frontend:${{ github.sha }}" >> $GITHUB_OUTPUT
+          fi
+
+      # Build and push Backend
+      - name: Build and push Backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./backend/Dockerfile
+          push: ${{ github.event_name == 'push' }}
+          tags: ${{ steps.tags.outputs.backend_tags }}
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/cinebook-backend:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/cinebook-backend:buildcache,mode=max
+
+      # Build and push Frontend
+      - name: Build and push Frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./frontend/Dockerfile
+          push: ${{ github.event_name == 'push' }}
+          tags: ${{ steps.tags.outputs.frontend_tags }}
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/cinebook-frontend:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/cinebook-frontend:buildcache,mode=max
+
+      # Notify Success
+      - name: Notify Success
+        if: success()
+        run: |
+          echo "✅ Docker images successfully pushed to Docker Hub!"
+          echo "Backend: ${{ steps.tags.outputs.backend_tags }}"
+          echo "Frontend: ${{ steps.tags.outputs.frontend_tags }}"

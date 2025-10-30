@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: backend
+    env: docker
+    dockerfilePath: backend/Dockerfile
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_ROOT_USER
+        fromDatabase:
+          name: mongodb
+          property: user
+      - key: MONGO_ROOT_PASSWORD
+        fromDatabase:
+          name: mongodb
+          property: password
+      - key: JWT_SECRET
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_PUBLIC_KEY
+        sync: false
+
+  - type: web
+    name: frontend
+    env: docker
+    dockerfilePath: frontend/Dockerfile
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: /api
+
+  - type: pserv
+    name: mongodb
+    env: docker
+    repo: https://github.com/docker-library/mongo.git
+    envVars:
+      - key: MONGO_INITDB_ROOT_USERNAME
+        value: cinebook
+      - key: MONGO_INITDB_ROOT_PASSWORD
+        sync: false
+      - key: MONGO_INITDB_DATABASE
+        value: cinebook_db

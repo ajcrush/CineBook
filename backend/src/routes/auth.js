@@ -102,6 +102,66 @@ router.post(
   }
 );
 
+// Register Admin (protected - only accessible internally or with admin token)
+router.post(
+  "/register-admin",
+  [
+    body("name").notEmpty().withMessage("Name is required"),
+    body("email").isEmail().withMessage("Valid email is required"),
+    body("password")
+      .isLength({ min: 6 })
+      .withMessage("Password must be at least 6 characters"),
+    body("adminSecret").notEmpty().withMessage("Admin secret is required"),
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+
+      // Verify admin secret matches environment variable
+      const adminSecret = process.env.ADMIN_SECRET || "admin-secret-key";
+      if (req.body.adminSecret !== adminSecret) {
+        return res.status(403).json({ message: "Invalid admin secret" });
+      }
+
+      const { name, email, password, phone } = req.body;
+
+      // Check if user exists
+      let user = await User.findOne({ email });
+      if (user) {
+        return res.status(400).json({ message: "User already exists" });
+      }
+
+      // Create admin user
+      user = new User({
+        name,
+        email,
+        password,
+        phone,
+        role: "admin",
+      });
+
+      await user.save();
+
+      const token = generateToken(user);
+      res.status(201).json({
+        message: "Admin user registered successfully",
+        token,
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Server error", error: error.message });
+    }
+  }
+);
+
 // Get current user
 router.get("/me", authenticateToken, async (req, res) => {
   try {

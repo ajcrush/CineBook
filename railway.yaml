@@ -1,0 +1,35 @@
+name: CineBook Deployment
+
+services:
+  backend:
+    image: cinebook-backend:latest
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - NODE_ENV=production
+    ports:
+      - "5000:5000"
+
+  frontend:
+    image: cinebook-frontend:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - VITE_API_BASE_URL=${API_URL}
+
+  mongodb:
+    image: mongo:7
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_INITDB_DATABASE=cinebook_db
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
+
+networks:
+  cinebook:
+    external: false

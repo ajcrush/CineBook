@@ -1,0 +1,62 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Misc
+.cache/
+.env.example
+
+# DevOps & Docker
+docker-compose.override.yml
+logs/
+backups/
+*.archive
+*.archive.gz
+
+# Kubernetes
+kubeconfig
+.kube/
+
+# Secrets
+*.key
+*.pem
+*.p12
+secrets/
+
+# Temporary
+tmp/
+temp/
