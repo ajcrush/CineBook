@@ -43,7 +43,7 @@ export default function CheckoutPage() {
       });
 
       // Create booking with movieId
-      await createBooking(
+      const bookingResponse = await createBooking(
         showtime._id,
         seats,
         totalPrice,
@@ -51,30 +51,134 @@ export default function CheckoutPage() {
         paymentMethod
       );
 
-      // Note: Stripe payment integration would go here
-      // For now, we'll just confirm the booking
-      // const paymentResponse = await api.post("/payments/create-intent", {
-      //   bookingId: booking._id,
-      // });
+      if (paymentMethod === "razorpay") {
+        // Handle Razorpay payment
+        try {
+          // Step 1: Create Razorpay Order on backend
+          const orderResponse = await api.post(
+            "/payments/razorpay/create-order",
+            {
+              bookingId: bookingResponse._id,
+            }
+          );
 
-      // In a real app, you would integrate Stripe Elements here
-      // For now, we'll mock the payment confirmation
-      setToast({
-        message: "✅ Booking confirmed! Your seats are reserved.",
-        type: "success",
-      });
+          const { orderId, amount } = orderResponse.data;
 
-      setTimeout(() => {
-        navigate("/my-bookings", {
-          state: { bookingConfirmed: true },
+          // Step 2: Load Razorpay script if not already loaded
+          if (!window.Razorpay) {
+            await new Promise((resolve, reject) => {
+              const script = document.createElement("script");
+              script.src = "https://checkout.razorpay.com/v1/checkout.js";
+              script.onload = resolve;
+              script.onerror = reject;
+              document.body.appendChild(script);
+            });
+          }
+
+          // Step 3: Initialize Razorpay options
+          const razorpayKeyId = import.meta.env.VITE_RAZORPAY_KEY_ID;
+
+          if (!razorpayKeyId) {
+            throw new Error(
+              "Razorpay Key ID is not configured. Please add VITE_RAZORPAY_KEY_ID to .env.local"
+            );
+          }
+
+          const razorpayOptions = {
+            key: razorpayKeyId,
+            amount: amount, // in paise
+            currency: "INR",
+            name: "CineBook",
+            description: `Movie Booking - ${movie.title}`,
+            order_id: orderId,
+            handler: async (response) => {
+              try {
+                // Step 4: Verify payment on backend
+                const verifyResponse = await api.post(
+                  "/payments/razorpay/verify",
+                  {
+                    bookingId: bookingResponse._id,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_signature: response.razorpay_signature,
+                  }
+                );
+
+                setToast({
+                  message: "✅ Payment successful! Booking confirmed.",
+                  type: "success",
+                });
+
+                setTimeout(() => {
+                  navigate("/my-bookings", {
+                    state: { bookingConfirmed: true },
+                  });
+                }, 2000);
+              } catch (verifyError) {
+                console.error("Verification error:", verifyError);
+                setToast({
+                  message:
+                    verifyError.response?.data?.message ||
+                    "Payment verification failed",
+                  type: "error",
+                });
+                setIsProcessing(false);
+              }
+            },
+            prefill: {
+              name: "Guest User",
+              email: "guest@example.com",
+              contact: "9000000000",
+            },
+            notes: {
+              bookingId: bookingResponse._id,
+              movieTitle: movie.title,
+            },
+            theme: {
+              color: "#dc2626",
+            },
+            modal: {
+              ondismiss: () => {
+                setToast({
+                  message: "Payment cancelled. Booking is still reserved.",
+                  type: "error",
+                });
+                setIsProcessing(false);
+              },
+            },
+          };
+
+          // Step 5: Open Razorpay Checkout
+          const rzp = new window.Razorpay(razorpayOptions);
+          rzp.open();
+        } catch (razorpayError) {
+          console.error("Razorpay error:", razorpayError);
+          setToast({
+            message:
+              razorpayError.response?.data?.message ||
+              "Razorpay integration failed",
+            type: "error",
+          });
+          setIsProcessing(false);
+        }
+      } else if (paymentMethod === "stripe") {
+        // Handle Stripe payment (placeholder for now)
+        setToast({
+          message: "✅ Booking confirmed! Your seats are reserved.",
+          type: "success",
         });
-      }, 2000);
+
+        setTimeout(() => {
+          navigate("/my-bookings", {
+            state: { bookingConfirmed: true },
+          });
+        }, 2000);
+      }
     } catch (error) {
       setToast({
         message: error.response?.data?.message || "Checkout failed",
         type: "error",
       });
-    } finally {
       setIsProcessing(false);
     }
   };

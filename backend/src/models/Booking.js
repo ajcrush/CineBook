@@ -36,6 +36,10 @@ const bookingSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    razorpayOrderId: {
+      type: String,
+      default: null,
+    },
     bookingStatus: {
       type: String,
       enum: ["confirmed", "cancelled", "completed"],

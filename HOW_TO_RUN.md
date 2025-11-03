@@ -327,7 +327,56 @@ npm run dev
 
 ---
 
-## 📦 Option 5: Build for Production
+## � Payment Gateway Configuration (Razorpay)
+
+### Setup Razorpay Test Keys
+
+#### Step 1: Get Razorpay Test Keys
+
+1. Log in to your [Razorpay Dashboard](https://dashboard.razorpay.com)
+2. Go to **Settings** → **API Keys**
+3. Copy your **Key ID** (starts with `rzp_test_`)
+4. Copy your **Key Secret**
+
+#### Step 2: Configure Backend (.env)
+
+```bash
+# In backend/.env
+RAZORPAY_KEY_ID=rzp_test_your_key_id_here
+RAZORPAY_KEY_SECRET=your_key_secret_here
+```
+
+**⚠️ IMPORTANT:** Never commit `RAZORPAY_KEY_SECRET` to Git. Use `.env` for local dev and environment variables in production.
+
+#### Step 3: Configure Frontend (.env.local)
+
+```bash
+# In frontend/.env.local
+VITE_RAZORPAY_KEY_ID=rzp_test_your_key_id_here
+```
+
+**Note:** Only the **Key ID** is exposed to the frontend (public). The **Key Secret** remains server-side only.
+
+#### Step 4: Test Razorpay Integration
+
+1. Start backend: `npm run dev` (from backend folder)
+2. Start frontend: `npm run dev` (from frontend folder)
+3. Go to Movies → Select seats → Checkout
+4. Choose **"Razorpay (UPI/Wallet)"** payment method
+5. You'll see Razorpay test checkout modal
+6. Use test credentials from [Razorpay Test Card List](https://razorpay.com/docs/payments/payments/test-mode/)
+
+#### Step 5: Test Card Details (Test Mode)
+
+| Method          | Card Number           | Expiry          | CVV          |
+| --------------- | --------------------- | --------------- | ------------ |
+| **Credit Card** | `4111 1111 1111 1111` | Any future date | Any 3 digits |
+| **Visa**        | `4111111111111111`    | 12/25           | 123          |
+| **Mastercard**  | `5555555555554444`    | 12/25           | 123          |
+
+**Test UPI:** `success@razorpay` (for UPI testing)
+
+---
 
 Preparing code for deployment.
 

@@ -26,6 +26,7 @@
     "jsonwebtoken": "^9.0.2",
     "bcryptjs": "^2.4.3",
     "stripe": "^13.0.0",
+    "razorpay": "^2.7.0",
     "cors": "^2.8.5",
     "express-validator": "^7.0.1"
   },

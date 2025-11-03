@@ -14,8 +14,8 @@
     "test:ui": "vitest --ui"
   },
   "dependencies": {
-    "@stripe/react-stripe-js": "^2.4.0",
-    "@stripe/stripe-js": "^2.1.11",
+    "@stripe/react-stripe-js": "^2.7.0",
+    "@stripe/stripe-js": "^3.0.0",
     "autoprefixer": "^10.4.16",
     "axios": "^1.6.2",
     "lucide-react": "^0.548.0",
