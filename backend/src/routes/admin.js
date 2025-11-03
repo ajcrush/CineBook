@@ -238,7 +238,7 @@ router.get("/showtimes/list/all", adminAuth, async (req, res) => {
 router.get("/dashboard/stats", adminAuth, async (req, res) => {
   try {
     const totalMovies = await Movie.countDocuments();
-    const totalUsers = await User.countDocuments({ role: "user" });
+    const totalUsers = await User.countDocuments();
     const totalBookings = await Booking.countDocuments();
     const totalRevenue = await Booking.aggregate([
       { $match: { paymentStatus: "completed" } },
@@ -281,9 +281,7 @@ router.get("/bookings", adminAuth, async (req, res) => {
 // Get all users (admin only)
 router.get("/users", adminAuth, async (req, res) => {
   try {
-    const users = await User.find({ role: "user" })
-      .select("-password")
-      .sort({ createdAt: -1 });
+    const users = await User.find().select("-password").sort({ createdAt: -1 });
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
