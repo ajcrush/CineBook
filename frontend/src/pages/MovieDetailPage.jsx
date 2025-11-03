@@ -67,13 +67,13 @@ export default function MovieDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 py-12 transition-colors duration-200">
+    <div className="min-h-screen bg-white dark:bg-gray-900 py-6 sm:py-8 md:py-12 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {/* Movie Poster */}
           <div
-            className="relative rounded-lg overflow-hidden shadow-lg bg-gradient-to-br from-primary to-red-800"
-            style={{ aspectRatio: "3/4" }}
+            className="relative rounded-lg overflow-hidden shadow-lg bg-gradient-to-br from-primary to-red-800 mx-auto w-full md:w-auto"
+            style={{ aspectRatio: "3/4", maxWidth: "300px" }}
           >
             <img
               src={currentMovie.posterUrl}
@@ -92,68 +92,88 @@ export default function MovieDetailPage() {
               style={{ display: "none" }}
             >
               <div className="text-center text-white">
-                <p className="text-6xl font-bold opacity-80">
+                <p className="text-4xl sm:text-5xl md:text-6xl font-bold opacity-80">
                   {currentMovie.title?.charAt(0).toUpperCase()}
                 </p>
-                <p className="text-sm mt-4 px-4">{currentMovie.title}</p>
+                <p className="text-xs sm:text-sm mt-4 px-4">
+                  {currentMovie.title}
+                </p>
               </div>
             </div>
           </div>
 
           {/* Movie Info */}
           <div className="md:col-span-2">
-            <h1 className="text-4xl font-bold text-dark mb-4">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-dark dark:text-white mb-3 sm:mb-4">
               {currentMovie.title}
             </h1>
 
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="bg-white p-4 rounded-lg">
-                <p className="text-gray-600 text-sm">Duration</p>
-                <p className="text-2xl font-bold text-primary">
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4 mb-6">
+              <div className="bg-white dark:bg-gray-800 p-3 sm:p-4 rounded-lg">
+                <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm">
+                  Duration
+                </p>
+                <p className="text-lg sm:text-2xl font-bold text-primary">
                   {currentMovie.duration} mins
                 </p>
               </div>
-              <div className="bg-white p-4 rounded-lg">
-                <p className="text-gray-600 text-sm">Language</p>
-                <p className="text-2xl font-bold text-primary">
+              <div className="bg-white dark:bg-gray-800 p-3 sm:p-4 rounded-lg">
+                <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm">
+                  Language
+                </p>
+                <p className="text-lg sm:text-2xl font-bold text-primary">
                   {currentMovie.language}
                 </p>
               </div>
-              <div className="bg-white p-4 rounded-lg col-span-2">
-                <p className="text-gray-600 text-sm">Genre</p>
-                <p className="text-lg font-bold text-dark">
+              <div className="bg-white dark:bg-gray-800 p-3 sm:p-4 rounded-lg col-span-2">
+                <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm">
+                  Genre
+                </p>
+                <p className="text-base sm:text-lg font-bold text-dark dark:text-white">
                   {currentMovie.genre?.join(", ")}
                 </p>
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow mb-6">
-              <h3 className="text-xl font-bold text-dark mb-2">Description</h3>
-              <p className="text-gray-700">{currentMovie.description}</p>
+            <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow mb-6 transition-colors duration-200">
+              <h3 className="text-lg sm:text-xl font-bold text-dark dark:text-white mb-2">
+                Description
+              </h3>
+              <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base">
+                {currentMovie.description}
+              </p>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-xl font-bold text-dark mb-4">
+            <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow transition-colors duration-200">
+              <h3 className="text-lg sm:text-xl font-bold text-dark dark:text-white mb-3 sm:mb-4">
                 Select Showtime
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3">
                 {showtimes.length === 0 ? (
-                  <p className="text-gray-600">No showtimes available</p>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    No showtimes available
+                  </p>
                 ) : (
                   showtimes.map((showtime) => (
                     <button
                       key={showtime._id}
                       onClick={() => setSelectedShowtime(showtime)}
-                      className={`w-full p-3 rounded-lg font-semibold transition text-left ${
+                      className={`w-full p-3 rounded-lg font-semibold transition text-left text-sm sm:text-base ${
                         selectedShowtime?._id === showtime._id
                           ? "bg-primary text-white"
-                          : "bg-gray-100 text-dark hover:bg-gray-200"
+                          : "bg-gray-100 dark:bg-gray-700 text-dark dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600"
                       }`}
                     >
-                      <div className="flex justify-between items-center">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                         <span>{showtime.startTime}</span>
-                        <span className="text-sm">Hall {showtime.theater}</span>
-                        <span className="text-sm">₹{showtime.price}</span>
+                        <div className="flex justify-between sm:gap-4">
+                          <span className="text-xs sm:text-sm">
+                            Hall {showtime.theater}
+                          </span>
+                          <span className="text-xs sm:text-sm font-bold">
+                            ₹{showtime.price}
+                          </span>
+                        </div>
                       </div>
                     </button>
                   ))
@@ -175,7 +195,7 @@ export default function MovieDetailPage() {
                   <button
                     onClick={handleLockSeats}
                     disabled={selectedSeats.length === 0}
-                    className="bg-primary text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-red-700 transition disabled:opacity-50 shadow-lg"
+                    className="bg-primary text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-bold text-base sm:text-lg hover:bg-red-700 transition disabled:opacity-50 shadow-lg w-full sm:w-auto"
                   >
                     Lock & Proceed to Checkout
                   </button>

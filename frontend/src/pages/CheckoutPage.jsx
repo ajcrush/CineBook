@@ -184,50 +184,71 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 py-12 transition-colors duration-200">
+    <div className="min-h-screen bg-white dark:bg-gray-900 py-6 sm:py-8 md:py-12 transition-colors duration-200">
       <div className="max-w-4xl mx-auto px-4">
-        <h1 className="text-3xl font-bold text-dark mb-8">Checkout</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-dark dark:text-white mb-6 sm:mb-8">
+          Checkout
+        </h1>
 
-        <div className="grid gap-8">
+        <div className="grid gap-6 sm:gap-8">
           {/* Order Summary */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-2xl font-bold text-dark mb-4">Order Summary</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6 transition-colors duration-200">
+            <h2 className="text-xl sm:text-2xl font-bold text-dark dark:text-white mb-3 sm:mb-4">
+              Order Summary
+            </h2>
 
-            <div className="space-y-4 border-b pb-4 mb-4">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Movie</span>
-                <span className="font-bold text-dark">{movie.title}</span>
+            <div className="space-y-3 sm:space-y-4 border-b border-gray-300 dark:border-gray-600 pb-3 sm:pb-4 mb-3 sm:mb-4">
+              <div className="flex justify-between text-xs sm:text-base">
+                <span className="text-gray-600 dark:text-gray-400">Movie</span>
+                <span className="font-bold text-dark dark:text-white">
+                  {movie.title}
+                </span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Date & Time</span>
-                <span className="font-bold text-dark">
+              <div className="flex justify-between text-xs sm:text-base">
+                <span className="text-gray-600 dark:text-gray-400">
+                  Date & Time
+                </span>
+                <span className="font-bold text-dark dark:text-white text-right">
                   {new Date(showtime.date).toLocaleDateString()} @{" "}
                   {showtime.startTime}
                 </span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Hall</span>
-                <span className="font-bold text-dark">{showtime.theater}</span>
+              <div className="flex justify-between text-xs sm:text-base">
+                <span className="text-gray-600 dark:text-gray-400">Hall</span>
+                <span className="font-bold text-dark dark:text-white">
+                  {showtime.theater}
+                </span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Seats</span>
-                <span className="font-bold text-dark">{seats.join(", ")}</span>
+              <div className="flex justify-between text-xs sm:text-base">
+                <span className="text-gray-600 dark:text-gray-400">Seats</span>
+                <span className="font-bold text-dark dark:text-white text-right">
+                  {seats.join(", ")}
+                </span>
               </div>
             </div>
 
-            <div className="space-y-2 mb-6">
+            <div className="space-y-1 sm:space-y-2 mb-4 sm:mb-6">
               {seats.map((seat) => (
-                <div key={seat} className="flex justify-between">
-                  <span className="text-gray-600">Seat {seat}</span>
-                  <span className="font-bold text-dark">₹{showtime.price}</span>
+                <div
+                  key={seat}
+                  className="flex justify-between text-xs sm:text-base"
+                >
+                  <span className="text-gray-600 dark:text-gray-400">
+                    Seat {seat}
+                  </span>
+                  <span className="font-bold text-dark dark:text-white">
+                    ₹{showtime.price}
+                  </span>
                 </div>
               ))}
             </div>
 
-            <div className="border-t pt-4">
-              <div className="flex justify-between text-lg">
-                <span className="font-bold text-dark">Total Amount</span>
-                <span className="text-2xl font-bold text-primary">
+            <div className="border-t border-gray-300 dark:border-gray-600 pt-3 sm:pt-4">
+              <div className="flex justify-between text-base sm:text-lg">
+                <span className="font-bold text-dark dark:text-white">
+                  Total Amount
+                </span>
+                <span className="text-xl sm:text-2xl font-bold text-primary">
                   ₹{totalPrice}
                 </span>
               </div>
@@ -235,34 +256,34 @@ export default function CheckoutPage() {
           </div>
 
           {/* Payment Method Selection */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-2xl font-bold text-dark mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6 transition-colors duration-200">
+            <h2 className="text-xl sm:text-2xl font-bold text-dark dark:text-white mb-3 sm:mb-4">
               Payment Method
             </h2>
 
-            <div className="space-y-3">
-              <label className="flex items-center p-3 border-2 rounded-lg cursor-pointer border-primary bg-blue-50">
+            <div className="space-y-2 sm:space-y-3">
+              <label className="flex items-start sm:items-center p-3 sm:p-4 border-2 rounded-lg cursor-pointer border-primary bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition">
                 <input
                   type="radio"
                   value="stripe"
                   checked={paymentMethod === "stripe"}
                   onChange={(e) => setPaymentMethod(e.target.value)}
-                  className="w-4 h-4"
+                  className="w-4 h-4 mt-0.5"
                 />
-                <span className="ml-3 font-semibold text-dark">
+                <span className="ml-2 sm:ml-3 font-semibold text-dark dark:text-white text-sm sm:text-base">
                   Credit/Debit Card (Stripe)
                 </span>
               </label>
 
-              <label className="flex items-center p-3 border-2 rounded-lg cursor-pointer border-gray-300 hover:border-primary">
+              <label className="flex items-start sm:items-center p-3 sm:p-4 border-2 rounded-lg cursor-pointer border-gray-300 dark:border-gray-600 hover:border-primary dark:hover:border-primary transition">
                 <input
                   type="radio"
                   value="razorpay"
                   checked={paymentMethod === "razorpay"}
                   onChange={(e) => setPaymentMethod(e.target.value)}
-                  className="w-4 h-4"
+                  className="w-4 h-4 mt-0.5"
                 />
-                <span className="ml-3 font-semibold text-dark">
+                <span className="ml-2 sm:ml-3 font-semibold text-dark dark:text-white text-sm sm:text-base">
                   Razorpay (UPI/Wallet)
                 </span>
               </label>
@@ -273,14 +294,14 @@ export default function CheckoutPage() {
           <button
             onClick={handleCheckout}
             disabled={isProcessing}
-            className="w-full bg-primary text-white py-3 rounded-lg font-bold text-lg hover:bg-red-700 transition disabled:opacity-50"
+            className="w-full bg-primary text-white py-3 sm:py-4 rounded-lg font-bold text-base sm:text-lg hover:bg-red-700 transition disabled:opacity-50 min-h-12 sm:min-h-14"
           >
             {isProcessing
               ? "Processing..."
               : `Pay ₹${totalPrice} & Confirm Booking`}
           </button>
 
-          <p className="text-center text-gray-600 text-sm">
+          <p className="text-center text-gray-600 dark:text-gray-400 text-xs sm:text-sm px-2">
             ⏱️ You have 15 minutes to complete this booking before seats are
             released
           </p>

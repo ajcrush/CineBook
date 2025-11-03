@@ -33,8 +33,8 @@ export default function MoviesPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-8">
+      <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6 sm:mb-8">
           Available Movies
         </h1>
 
@@ -44,7 +44,7 @@ export default function MoviesPage() {
             <button
               key={genre}
               onClick={() => setSelectedGenre(genre)}
-              className={`px-4 py-2 rounded-lg font-semibold transition ${
+              className={`px-3 sm:px-4 py-2 rounded-lg font-semibold text-sm sm:text-base transition ${
                 selectedGenre === genre
                   ? "bg-primary text-white"
                   : "bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-2 border-gray-300 dark:border-gray-600 hover:border-primary"
@@ -60,12 +60,12 @@ export default function MoviesPage() {
           <Loader />
         ) : filteredMovies.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-xl text-gray-600 dark:text-gray-400">
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400">
               No movies found
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
             {filteredMovies.map((movie) => (
               <MovieCard key={movie._id} movie={movie} />
             ))}
