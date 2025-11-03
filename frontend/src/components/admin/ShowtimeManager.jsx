@@ -115,9 +115,13 @@ export default function ShowtimeManager() {
     }
 
     try {
+      // Convert date string to ISO 8601 format with start of day time
+      const dateObj = new Date(formData.date);
+      const isoDate = dateObj.toISOString();
+
       const payload = {
         movieId: formData.movieId,
-        date: formData.date,
+        date: isoDate,
         startTime: formData.startTime,
         endTime: formData.endTime,
         theater:

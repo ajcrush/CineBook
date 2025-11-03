@@ -37,6 +37,9 @@ export default function MyBookingsPage() {
     );
   }
 
+  // Safety check to ensure bookings is always an array
+  const bookingsArray = Array.isArray(bookings) ? bookings : [];
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 py-12 transition-colors duration-200">
       <div className="max-w-4xl mx-auto px-4">
@@ -46,7 +49,7 @@ export default function MyBookingsPage() {
 
         {isLoading ? (
           <Loader />
-        ) : bookings.length === 0 ? (
+        ) : bookingsArray.length === 0 ? (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-lg p-12 text-center transition-colors duration-200">
             <div className="text-5xl mb-4">🎬</div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
@@ -64,69 +67,70 @@ export default function MyBookingsPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            {bookings.map((booking) => (
-              <div
-                key={booking._id}
-                className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-lg p-6 transition-colors duration-200"
-              >
-                <div className="grid md:grid-cols-3 gap-6">
-                  <div>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm">
-                      Movie Title
-                    </p>
-                    <p className="text-xl font-bold text-gray-900 dark:text-white">
-                      {booking.movie?.title}
-                    </p>
-                  </div>
-
-                  <div>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm">
-                      Booking Details
-                    </p>
-                    <p className="text-lg font-bold text-gray-900 dark:text-white">
-                      Seats:{" "}
-                      {booking.seats?.map((s) => s.seatNumber).join(", ")}
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                      {new Date(booking.createdAt).toLocaleDateString()}
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col justify-between items-end">
-                    <div className="text-right">
+            {Array.isArray(bookingsArray) &&
+              bookingsArray.map((booking) => (
+                <div
+                  key={booking._id}
+                  className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-lg p-6 transition-colors duration-200"
+                >
+                  <div className="grid md:grid-cols-3 gap-6">
+                    <div>
                       <p className="text-gray-600 dark:text-gray-400 text-sm">
-                        Total Amount
+                        Movie Title
                       </p>
-                      <p className="text-2xl font-bold text-primary">
-                        ₹{booking.totalPrice}
+                      <p className="text-xl font-bold text-gray-900 dark:text-white">
+                        {booking.movie?.title}
                       </p>
                     </div>
-                    <div className="flex gap-2">
-                      <span
-                        className={`px-3 py-1 rounded-full text-sm font-bold transition-colors ${
-                          booking.paymentStatus === "completed"
-                            ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200"
-                            : "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200"
-                        }`}
-                      >
-                        {booking.paymentStatus}
-                      </span>
-                      {booking.bookingStatus === "confirmed" && (
-                        <button
-                          onClick={() => {
-                            setSelectedBooking(booking);
-                            setShowCancelModal(true);
-                          }}
-                          className="px-3 py-1 bg-red-500 dark:bg-red-600 text-white rounded font-bold hover:bg-red-600 dark:hover:bg-red-700 transition text-sm"
+
+                    <div>
+                      <p className="text-gray-600 dark:text-gray-400 text-sm">
+                        Booking Details
+                      </p>
+                      <p className="text-lg font-bold text-gray-900 dark:text-white">
+                        Seats:{" "}
+                        {booking.seats?.map((s) => s.seatNumber).join(", ")}
+                      </p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                        {new Date(booking.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col justify-between items-end">
+                      <div className="text-right">
+                        <p className="text-gray-600 dark:text-gray-400 text-sm">
+                          Total Amount
+                        </p>
+                        <p className="text-2xl font-bold text-primary">
+                          ₹{booking.totalPrice}
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <span
+                          className={`px-3 py-1 rounded-full text-sm font-bold transition-colors ${
+                            booking.paymentStatus === "completed"
+                              ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200"
+                              : "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200"
+                          }`}
                         >
-                          Cancel
-                        </button>
-                      )}
+                          {booking.paymentStatus}
+                        </span>
+                        {booking.bookingStatus === "confirmed" && (
+                          <button
+                            onClick={() => {
+                              setSelectedBooking(booking);
+                              setShowCancelModal(true);
+                            }}
+                            className="px-3 py-1 bg-red-500 dark:bg-red-600 text-white rounded font-bold hover:bg-red-600 dark:hover:bg-red-700 transition text-sm"
+                          >
+                            Cancel
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         )}
       </div>

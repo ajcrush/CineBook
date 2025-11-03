@@ -22,7 +22,11 @@ router.get("/:id", async (req, res) => {
   try {
     const movie = await Movie.findById(req.params.id).populate({
       path: "showtimes",
-      match: { date: { $gte: new Date() } },
+      match: {
+        date: {
+          $gte: new Date(new Date().toISOString().split("T")[0]),
+        },
+      },
       options: { sort: { date: 1 } },
     });
 
@@ -41,7 +45,9 @@ router.get("/:movieId/showtimes", async (req, res) => {
   try {
     const showtimes = await Showtime.find({
       movie: req.params.movieId,
-      date: { $gte: new Date() },
+      date: {
+        $gte: new Date(new Date().toISOString().split("T")[0]),
+      },
     }).sort({ date: 1 });
 
     res.json(showtimes);

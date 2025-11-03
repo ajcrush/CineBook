@@ -53,12 +53,12 @@ export const useBookingStore = create((set) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await api.get("/bookings/my-bookings");
-      set({ bookings: response.data, isLoading: false });
-      return response.data;
+      set({ bookings: response.data || [], isLoading: false });
+      return response.data || [];
     } catch (error) {
       const errorMsg =
         error.response?.data?.message || "Failed to fetch bookings";
-      set({ error: errorMsg, isLoading: false });
+      set({ bookings: [], error: errorMsg, isLoading: false });
       throw error;
     }
   },
