@@ -45,9 +45,6 @@ router.get("/:movieId/showtimes", async (req, res) => {
   try {
     const showtimes = await Showtime.find({
       movie: req.params.movieId,
-      date: {
-        $gte: new Date(new Date().toISOString().split("T")[0]),
-      },
     }).sort({ date: 1 });
 
     res.json(showtimes);
